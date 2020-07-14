@@ -61,7 +61,10 @@
     <module name="ImportOrder">
       <property
         name="groups"
-        value="java,javax,junit,org,com" />
+        value="java,javax,org,com" />
+      <property
+        name="separated"
+        value="true" />
       <property
         name="option"
         value="top" />

@@ -15,11 +15,28 @@
  */
 package rocks.limburg.cdimock;
 
+import javax.enterprise.inject.se.SeContainer;
+import javax.enterprise.inject.se.SeContainerInitializer;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(CdiMocking.class)
 public class SingleClassJavaSeTest {
+
+    private static SeContainer cdiContainer;
+
+    @BeforeAll
+    public static void startCdiContainer() {
+        cdiContainer = SeContainerInitializer.newInstance().initialize();
+    }
+
+    @AfterAll
+    public static void closeCdiContainer() {
+        cdiContainer.close();
+    }
 
     @Test
     public void testExtension() {
