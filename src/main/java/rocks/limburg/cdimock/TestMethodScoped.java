@@ -15,21 +15,20 @@
  */
 package rocks.limburg.cdimock;
 
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
 
-public class CdiMocking implements BeforeAllCallback, BeforeEachCallback {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    static ExtensionContext testContext;
+import javax.enterprise.context.NormalScope;
 
-    @Override
-    public void beforeAll(ExtensionContext context) throws Exception {
-        CdiMockExtension.setClassContext(context);
-    }
-
-    @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
-        CdiMockExtension.setMethodContext(context);
-    }
+@NormalScope
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ANNOTATION_TYPE, FIELD, METHOD, PARAMETER, TYPE})
+public @interface TestMethodScoped {
 }

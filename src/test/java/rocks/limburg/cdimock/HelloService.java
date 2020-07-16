@@ -15,21 +15,18 @@
  */
 package rocks.limburg.cdimock;
 
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import java.util.Optional;
 
-public class CdiMocking implements BeforeAllCallback, BeforeEachCallback {
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
-    static ExtensionContext testContext;
+@ApplicationScoped
+public class HelloService {
 
-    @Override
-    public void beforeAll(ExtensionContext context) throws Exception {
-        CdiMockExtension.setClassContext(context);
-    }
+    @Inject
+    private Configuration configuration;
 
-    @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
-        CdiMockExtension.setMethodContext(context);
+    public String hello(Optional<String> greeting) {
+        return "hello " + greeting.orElseGet(() -> configuration.getDefaultGreeting());
     }
 }

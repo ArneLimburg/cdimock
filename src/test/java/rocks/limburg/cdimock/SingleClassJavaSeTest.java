@@ -15,30 +15,65 @@
  */
 package rocks.limburg.cdimock;
 
+import static java.util.Optional.empty;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
+import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.InjectionTarget;
+import javax.inject.Inject;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(CdiMocking.class)
-public class SingleClassJavaSeTest {
+class SingleClassJavaSeTest {
 
     private static SeContainer cdiContainer;
+    private CreationalContext<SingleClassJavaSeTest> creationalContext;
+    private InjectionTarget<SingleClassJavaSeTest> injectionTarget;
+
+    @CdiMock
+    private Configuration mockConfiguration = new MockConfiguration();
+
+    @Inject
+    private HelloService helloService;
 
     @BeforeAll
-    public static void startCdiContainer() {
+    static void startCdiContainer() {
         cdiContainer = SeContainerInitializer.newInstance().initialize();
     }
 
     @AfterAll
-    public static void closeCdiContainer() {
+    static void closeCdiContainer() {
         cdiContainer.close();
     }
 
+    @BeforeEach
+    void inject() {
+        BeanManager beanManager = cdiContainer.getBeanManager();
+        AnnotatedType<SingleClassJavaSeTest> annotatedType = beanManager.createAnnotatedType(SingleClassJavaSeTest.class);
+        injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        creationalContext = beanManager.createCreationalContext(null);
+        injectionTarget.inject(this, creationalContext);
+        injectionTarget.postConstruct(this);
+    }
+
+    @AfterEach
+    void destroy() {
+        injectionTarget.preDestroy(this);
+        injectionTarget.dispose(this);
+    }
+
     @Test
-    public void testExtension() {
+    void hello() {
+        assertEquals("hello mock", helloService.hello(empty()));
     }
 }
