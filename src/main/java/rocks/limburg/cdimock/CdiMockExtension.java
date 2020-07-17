@@ -30,6 +30,7 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.EventContext;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
@@ -62,6 +63,13 @@ public class CdiMockExtension implements Extension {
 
     public void fireBeforeAll(@Observes AfterDeploymentValidation event, BeanManager beanManager) {
         getExtensionContext().ifPresent(context -> beanManager.fireEvent(context, new BeforeAll.Literal()));
+    }
+
+    public void fireAfterAll(@Observes BeforeShutdown event, BeanManager beanManager) {
+        getExtensionContext().ifPresent(context -> {
+            beanManager.fireEvent(context, new AfterAll.Literal());
+            removeBeanManager();
+        });
     }
 
     private void addMockBeans(AfterBeanDiscovery event, BeanManager beanManager) {
@@ -100,9 +108,16 @@ public class CdiMockExtension implements Extension {
     }
 
     private void registerBeanManager(BeanManager beanManager) {
-        getExtensionContext().ifPresent(executionContext -> {
-            Store store = executionContext.getStore(Namespace.create(CdiMocking.class.getName()));
+        getExtensionContext().ifPresent(extensionContext -> {
+            Store store = extensionContext.getStore(Namespace.create(CdiMocking.class.getName()));
             store.put(BeanManager.class, beanManager);
+        });
+    }
+
+    private void removeBeanManager() {
+        getExtensionContext().ifPresent(extensionContext -> {
+            Store store = extensionContext.getStore(Namespace.create(CdiMocking.class.getName()));
+            store.remove(BeanManager.class);
         });
     }
 

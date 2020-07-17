@@ -17,6 +17,7 @@ package rocks.limburg.cdimock;
 
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static rocks.limburg.cdimock.ExcludeClassesExtension.exclude;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Produces;
@@ -42,7 +43,7 @@ class SingleClassJavaSeTest {
     private InjectionTarget<SingleClassJavaSeTest> injectionTarget;
 
     @CdiMock
-    private Configuration mockConfiguration = new MockConfiguration();
+    private Configuration mockConfiguration = new TestConfiguration();
     @Inject
     @CdiMock
     private Configuration injectedFieldsAreIgnored;
@@ -54,7 +55,7 @@ class SingleClassJavaSeTest {
 
     @BeforeAll
     static void startCdiContainer() {
-        cdiContainer = SeContainerInitializer.newInstance().initialize();
+        cdiContainer = SeContainerInitializer.newInstance().addExtensions(exclude(MockConfigurationProvider.class)).initialize();
     }
 
     @AfterAll

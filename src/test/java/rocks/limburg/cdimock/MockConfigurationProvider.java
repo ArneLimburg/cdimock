@@ -15,12 +15,23 @@
  */
 package rocks.limburg.cdimock;
 
-import javax.enterprise.inject.Vetoed;
+import javax.annotation.PostConstruct;
+import javax.enterprise.inject.Produces;
 
-@Vetoed
-public class MockConfiguration extends Configuration {
+import org.mockito.Mockito;
 
-    public String getDefaultGreeting() {
-        return "mock";
+@CdiMock
+public class MockConfigurationProvider {
+
+    private Configuration mockConfiguration;
+
+    @PostConstruct
+    public void initMocks() {
+        mockConfiguration = Mockito.mock(Configuration.class);
+    }
+
+    @Produces
+    public Configuration getMockConfiguration() {
+        return mockConfiguration;
     }
 }

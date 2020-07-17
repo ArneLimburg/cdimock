@@ -18,54 +18,45 @@ package rocks.limburg.cdimock;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static rocks.limburg.cdimock.ExcludeClassesExtension.exclude;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.se.SeContainer;
-import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
 import javax.inject.Inject;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoSettings;
 
-@MockitoSettings
+@Tag("multi-class-java-se")
 @ExtendWith(CdiMocking.class)
-class SingleClassJavaSeMockitoTest {
+class MultiClassJavaSeTest {
 
     private static SeContainer cdiContainer;
-    private CreationalContext<SingleClassJavaSeMockitoTest> creationalContext;
-    private InjectionTarget<SingleClassJavaSeMockitoTest> injectionTarget;
-
-    @Mock
-    private Configuration mockConfiguration;
+    private CreationalContext<MultiClassJavaSeTest> creationalContext;
+    private InjectionTarget<MultiClassJavaSeTest> injectionTarget;
 
     @Inject
     private HelloService helloService;
 
-    @BeforeAll
-    static void startCdiContainer() {
-        cdiContainer = SeContainerInitializer.newInstance().addExtensions(exclude(MockConfigurationProvider.class)).initialize();
-    }
+    @Inject
+    @ConfigurableMock
+    Configuration mockConfiguration;
 
-    @AfterAll
-    static void closeCdiContainer() {
-        cdiContainer.close();
+    @BeforeAll
+    static void initializeCdiContainer() {
+        cdiContainer = CdiContainer.instance();
     }
 
     @BeforeEach
     void inject() {
         BeanManager beanManager = cdiContainer.getBeanManager();
-        AnnotatedType<SingleClassJavaSeMockitoTest> annotatedType = beanManager.createAnnotatedType(SingleClassJavaSeMockitoTest.class);
+        AnnotatedType<MultiClassJavaSeTest> annotatedType = beanManager.createAnnotatedType(MultiClassJavaSeTest.class);
         injectionTarget = beanManager.createInjectionTarget(annotatedType);
         creationalContext = beanManager.createCreationalContext(null);
         injectionTarget.inject(this, creationalContext);
@@ -80,14 +71,7 @@ class SingleClassJavaSeMockitoTest {
 
     @Test
     void hello() {
-        when(mockConfiguration.getDefaultGreeting()).thenReturn("mockito");
-        assertEquals("hello mockito", helloService.hello(empty()));
-    }
-
-    @Test
-    @DisplayName("every test gets its own mock instance")
-    void differentMockInstancesInjectedPerTest() {
-        when(mockConfiguration.getDefaultGreeting()).thenReturn("new mock instance");
-        assertEquals("hello new mock instance", helloService.hello(empty()));
+        when(mockConfiguration.getDefaultGreeting()).thenReturn("@TestExecutionScoped mock");
+        assertEquals("hello @TestExecutionScoped mock", helloService.hello(empty()));
     }
 }
