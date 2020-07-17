@@ -19,6 +19,7 @@ import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -42,6 +43,11 @@ class SingleClassJavaSeTest {
 
     @CdiMock
     private Configuration mockConfiguration = new MockConfiguration();
+    @Inject
+    @CdiMock
+    private Configuration injectedFieldsAreIgnored;
+    @Produces
+    private Configuration producedFieldsAreIgnored;
 
     @Inject
     private HelloService helloService;

@@ -15,21 +15,51 @@
  */
 package rocks.limburg.cdimock;
 
+import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
+
+import java.util.Optional;
+
+import javax.enterprise.inject.spi.BeanManager;
+
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 
-public class CdiMocking implements BeforeAllCallback, BeforeEachCallback {
+public class CdiMocking implements BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback {
 
-    static ExtensionContext testContext;
+    public static final Namespace NAMESPACE = Namespace.create(CdiMocking.class.getName());
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
-        CdiMockExtension.setClassContext(context);
+        CdiMockExtension.beforeAll(context);
     }
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        CdiMockExtension.setMethodContext(context);
+        Optional<BeanManager> beanManager = getBeanManager(of(context));
+        beanManager.ifPresent(b -> b.fireEvent(context, new BeforeEach.Literal()));
+    }
+
+    @Override
+    public void afterEach(ExtensionContext context) throws Exception {
+        Optional<BeanManager> beanManager = getBeanManager(of(context));
+        beanManager.ifPresent(b -> b.fireEvent(context, new AfterEach.Literal()));
+    }
+
+    @Override
+    public void afterAll(ExtensionContext context) throws Exception {
+        Optional<BeanManager> beanManager = getBeanManager(of(context));
+        beanManager.ifPresent(b -> b.fireEvent(context, new AfterAll.Literal()));
+        CdiMockExtension.afterAll(context);
+    }
+
+    private Optional<BeanManager> getBeanManager(Optional<ExtensionContext> context) {
+        return context
+                .map(c -> c.getStore(NAMESPACE))
+                .flatMap(s -> ofNullable(s.get(BeanManager.class, BeanManager.class)));
     }
 }

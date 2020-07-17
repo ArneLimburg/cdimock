@@ -31,6 +31,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -80,5 +81,12 @@ class SingleClassJavaSeMockitoTest {
     void hello() {
         when(mockConfiguration.getDefaultGreeting()).thenReturn("mockito");
         assertEquals("hello mockito", helloService.hello(empty()));
+    }
+
+    @Test
+    @DisplayName("every test gets its own mock instance")
+    void differentMockInstancesInjectedPerTest() {
+        when(mockConfiguration.getDefaultGreeting()).thenReturn("new mock instance");
+        assertEquals("hello new mock instance", helloService.hello(empty()));
     }
 }

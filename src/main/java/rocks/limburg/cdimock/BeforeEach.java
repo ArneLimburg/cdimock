@@ -25,10 +25,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.enterprise.context.NormalScope;
+import javax.enterprise.util.AnnotationLiteral;
+import javax.inject.Qualifier;
 
-@NormalScope
+@Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ANNOTATION_TYPE, FIELD, METHOD, PARAMETER, TYPE})
-public @interface TestMethodScoped {
+public @interface BeforeEach {
+    class Literal extends AnnotationLiteral<BeforeEach> implements BeforeEach {
+    }
 }
