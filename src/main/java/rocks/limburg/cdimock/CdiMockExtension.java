@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
@@ -77,8 +78,18 @@ public class CdiMockExtension implements Extension {
         stream(classUnderTest.getDeclaredFields())
             .filter(f -> !f.isAnnotationPresent(Inject.class))
             .filter(f -> !f.isAnnotationPresent(Produces.class))
-            .filter(f -> f.isAnnotationPresent(CdiMock.class))
+            .filter(hasMockAnnotation())
             .forEach(mockTypes::add);
+    }
+
+    private Predicate<Field> hasMockAnnotation() {
+        return field -> field.isAnnotationPresent(CdiMock.class)
+                || stream(field.getAnnotations())
+                    .map(Annotation::annotationType)
+                    .map(Class::getName)
+                    .filter(name -> name.equals("org.mockito.Mock")) // integrate mockito without depending on it
+                    .findAny()
+                    .isPresent();
     }
 
     private Object getMock(Field field) {
