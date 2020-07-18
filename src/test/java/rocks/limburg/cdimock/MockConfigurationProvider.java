@@ -21,8 +21,11 @@ import javax.enterprise.inject.Produces;
 import org.mockito.Mockito;
 
 @CdiMock
+@TestExecutionScoped
 public class MockConfigurationProvider {
 
+    @Produces
+    @ConfigurableMock
     private Configuration mockConfiguration;
 
     @PostConstruct

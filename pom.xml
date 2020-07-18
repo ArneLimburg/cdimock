@@ -200,5 +200,15 @@
         </dependency>
       </dependencies>
     </profile>
+    <profile>
+      <id>weld</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.jboss.weld.se</groupId>
+          <artifactId>weld-se-core</artifactId>
+          <version>3.1.4.Final</version>
+        </dependency>
+      </dependencies>
+    </profile>
   </profiles>
 </project>

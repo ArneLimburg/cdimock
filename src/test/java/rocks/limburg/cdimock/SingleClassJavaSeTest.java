@@ -48,14 +48,15 @@ class SingleClassJavaSeTest {
     @CdiMock
     private Configuration injectedFieldsAreIgnored;
     @Produces
-    private Configuration producedFieldsAreIgnored;
+    private String producedFieldsAreIgnored;
 
     @Inject
     private HelloService helloService;
 
     @BeforeAll
     static void startCdiContainer() {
-        cdiContainer = SeContainerInitializer.newInstance().addExtensions(exclude(MockConfigurationProvider.class)).initialize();
+        cdiContainer = SeContainerInitializer.newInstance()
+                .addExtensions(exclude(MockConfigurationProvider.class, MultiClassJavaSeTest.class)).initialize();
     }
 
     @AfterAll

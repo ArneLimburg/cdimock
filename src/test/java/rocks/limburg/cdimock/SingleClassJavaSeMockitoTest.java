@@ -54,7 +54,8 @@ class SingleClassJavaSeMockitoTest {
 
     @BeforeAll
     static void startCdiContainer() {
-        cdiContainer = SeContainerInitializer.newInstance().addExtensions(exclude(MockConfigurationProvider.class)).initialize();
+        cdiContainer = SeContainerInitializer.newInstance()
+                .addExtensions(exclude(MockConfigurationProvider.class, MultiClassJavaSeTest.class)).initialize();
     }
 
     @AfterAll
