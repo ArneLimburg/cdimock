@@ -17,10 +17,10 @@ package rocks.limburg.cdimock;
 
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 import static rocks.limburg.cdimock.ExcludeClassesExtension.exclude;
 
 import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -32,23 +32,21 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(CdiMocking.class)
-class SingleClassJavaSeTest {
+@ExtendWith({ MockitoExtension.class, CdiMocking.class })
+class ContainerPerClassMockitoOrderingTest {
 
     private static SeContainer cdiContainer;
-    private CreationalContext<SingleClassJavaSeTest> creationalContext;
-    private InjectionTarget<SingleClassJavaSeTest> injectionTarget;
+    private CreationalContext<ContainerPerClassMockitoOrderingTest> creationalContext;
+    private InjectionTarget<ContainerPerClassMockitoOrderingTest> injectionTarget;
 
-    @CdiMock
-    private Configuration mockConfiguration = new TestConfiguration();
-    @Inject
-    @CdiMock
-    private Configuration injectedFieldsAreIgnored;
-    @Produces
-    private String producedFieldsAreIgnored;
+    @Mock
+    private Configuration mockConfiguration;
 
     @Inject
     private HelloService helloService;
@@ -56,7 +54,7 @@ class SingleClassJavaSeTest {
     @BeforeAll
     static void startCdiContainer() {
         cdiContainer = SeContainerInitializer.newInstance()
-                .addExtensions(exclude(MockConfigurationProvider.class, MultiClassJavaSeTest.class)).initialize();
+                .addExtensions(exclude(MockConfigurationProvider.class, ContainerPerExcecutionTest.class)).initialize();
     }
 
     @AfterAll
@@ -67,7 +65,8 @@ class SingleClassJavaSeTest {
     @BeforeEach
     void inject() {
         BeanManager beanManager = cdiContainer.getBeanManager();
-        AnnotatedType<SingleClassJavaSeTest> annotatedType = beanManager.createAnnotatedType(SingleClassJavaSeTest.class);
+        AnnotatedType<ContainerPerClassMockitoOrderingTest> annotatedType = beanManager
+                .createAnnotatedType(ContainerPerClassMockitoOrderingTest.class);
         injectionTarget = beanManager.createInjectionTarget(annotatedType);
         creationalContext = beanManager.createCreationalContext(null);
         injectionTarget.inject(this, creationalContext);
@@ -82,6 +81,14 @@ class SingleClassJavaSeTest {
 
     @Test
     void hello() {
-        assertEquals("hello mock", helloService.hello(empty()));
+        when(mockConfiguration.getDefaultGreeting()).thenReturn("mockito");
+        assertEquals("hello mockito", helloService.hello(empty()));
+    }
+
+    @Test
+    @DisplayName("every test gets its own mock instance")
+    void differentMockInstancesInjectedPerTest() {
+        when(mockConfiguration.getDefaultGreeting()).thenReturn("new mock instance");
+        assertEquals("hello new mock instance", helloService.hello(empty()));
     }
 }
