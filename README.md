@@ -70,8 +70,9 @@ the JUnit 5 extension of [Meecrowave Testing](https://openwebbeans.apache.org/me
 ensure, that the ``CdiMocking`` extension is declared **before** the respective cdi extensions.
 
 ```
-@ExtendWith({ MockitoExtension.class, CdiMocking.class, })
+@ExtendWith({ MockitoExtension.class, CdiMocking.class, CdiExtension.class })
 @MockitoSettings(strictness = LENIENT)
+@Cdi
 class CdiTest {
     ...
 }
