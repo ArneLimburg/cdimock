@@ -27,5 +27,5 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(CdiMocking.class)
 @Target({ANNOTATION_TYPE, TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EnabledCdiMocking {
+public @interface EnableCdiMocking {
 }

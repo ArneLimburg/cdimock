@@ -18,7 +18,6 @@ package rocks.limburg.cdimock;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static rocks.limburg.cdimock.ExcludeClassesExtension.exclude;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.se.SeContainer;
@@ -36,9 +35,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@MockitoSettings
-@EnabledCdiMocking
+@MockitoSettings(strictness = Strictness.LENIENT)
+@EnableCdiMocking
+@ExcludeClasses({ MockConfigurationProvider.class, ContainerPerExcecutionTest.class })
 class ContainerPerClassMockitoTest {
 
     private static SeContainer cdiContainer;
@@ -53,8 +54,7 @@ class ContainerPerClassMockitoTest {
 
     @BeforeAll
     static void startCdiContainer() {
-        cdiContainer = SeContainerInitializer.newInstance()
-                .addExtensions(exclude(MockConfigurationProvider.class, ContainerPerExcecutionTest.class)).initialize();
+        cdiContainer = SeContainerInitializer.newInstance().initialize();
     }
 
     @AfterAll

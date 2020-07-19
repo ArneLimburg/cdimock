@@ -16,7 +16,9 @@
 package rocks.limburg.cdimock;
 
 import static java.util.Arrays.stream;
+import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toSet;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -24,6 +26,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
@@ -33,15 +36,19 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.EventContext;
 import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.inject.Inject;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.platform.commons.util.AnnotationUtils;
 
 public class CdiMockExtension implements Extension {
 
     private static ThreadLocal<ExtensionContext> beforeAllContext = new ThreadLocal<ExtensionContext>();
+
+    private Set<Class<?>> classesToExclude;
 
     public static void beforeAll(ExtensionContext context) {
         beforeAllContext.set(context);
@@ -53,6 +60,21 @@ public class CdiMockExtension implements Extension {
 
     public Optional<ExtensionContext> getExtensionContext() {
         return ofNullable(beforeAllContext.get());
+    }
+
+    public void excludeClasses(@Observes ProcessAnnotatedType<?> event) {
+        if (classesToExclude == null) {
+            classesToExclude = getExtensionContext()
+                    .flatMap(ExtensionContext::getTestClass)
+                    .flatMap(c -> AnnotationUtils.findAnnotation(c, ExcludeClasses.class))
+                    .map(ExcludeClasses::value)
+                    .map(Stream::of)
+                    .map(s -> s.collect(toSet()))
+                    .orElse(emptySet());
+        }
+        if (classesToExclude.contains(event.getAnnotatedType().getJavaClass())) {
+            event.veto();
+        }
     }
 
     public void addBeansAndScope(@Observes AfterBeanDiscovery event, BeanManager beanManager) {
