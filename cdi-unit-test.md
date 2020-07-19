@@ -53,3 +53,22 @@ class CdiTest {
 
 In the example above, ``MyTestableService`` will be injected with all of its dependencies resolved and injected, too.
 If you want to mock some of the dependencies, see the [README](README.md).
+
+## Setup using OpenWebBeans JUnit 5 extension
+
+With the [OpenWebBeans JUnit 5](https://openwebbeans.apache.org/openwebbeans-junit5.html) extension
+you just have to annotate your test class with ``@Cdi``.
+
+```
+@Cdi
+class CdiTest {
+
+    @Inject
+    private MyTestableService serviceUnderTest;
+
+    @Test
+    void testService() {
+        ...
+    }
+}
+```

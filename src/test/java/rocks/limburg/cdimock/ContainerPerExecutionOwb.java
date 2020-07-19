@@ -15,27 +15,21 @@
  */
 package rocks.limburg.cdimock;
 
-import static java.util.Optional.empty;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.TYPE;
 
-import javax.inject.Inject;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 import org.apache.openwebbeans.junit5.Cdi;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Tag;
 
 @OwbClass
-@CdiExclude(classes = { MockConfigurationProvider.class, ContainerPerExecutionTest.class, ContainerPerExecutionOwbTest.class })
-@Cdi
-class ContainerPerClassOwbTest {
-
-    @CdiMock
-    private Configuration mockConfiguration = new TestConfiguration();
-
-    @Inject
-    private HelloService helloService;
-
-    @Test
-    void hello() {
-        assertEquals("hello mock", helloService.hello(empty()));
-    }
+@EnableCdiMocking
+@Cdi(reusable = true)
+@Tag("container-per-execution-owb")
+@Target({ANNOTATION_TYPE, TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ContainerPerExecutionOwb {
 }

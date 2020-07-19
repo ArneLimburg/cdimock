@@ -1,4 +1,4 @@
-# Starting a CDI Container for multiple test classes
+# Starting one CDI Container for multiple test classes
 
 We described [here](cdi-unit-test.md) how to use the CDI 2.0 SE api to start a container per test.
 When you want to start the container for multiple tests, you have to ensure,
@@ -35,3 +35,5 @@ class CdiTest {
     
     ...
 ```
+
+## Starting one CDI Container for multiple test classes with OpenWebBeans

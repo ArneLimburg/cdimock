@@ -38,7 +38,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
-@CdiExclude(classes = { MockConfigurationProvider.class, ContainerPerExecutionHelloServiceTest.class })
+@CdiExclude(classes = { MockConfigurationProvider.class, ContainerPerExecutionTest.class }, classesAnnotatedWith = OwbClass.class)
 class ContainerPerClassMockitoTest {
 
     private static SeContainer cdiContainer;

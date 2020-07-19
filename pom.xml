@@ -74,7 +74,7 @@
               <goal>test</goal>
             </goals>
             <configuration>
-              <excludedGroups>container-per-execution</excludedGroups>
+              <excludedGroups>container-per-execution,container-per-execution-owb</excludedGroups>
             </configuration>
           </execution>
           <execution>
@@ -205,6 +205,26 @@
           <scope>test</scope>
         </dependency>
       </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+            <executions>
+              <execution>
+                <id>container-per-execution-owb</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <configuration>
+                  <groups>container-per-execution-owb</groups>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>weld</id>
@@ -229,7 +249,8 @@
                 </goals>
                 <configuration>
                   <testExcludes>
-                    <exclude>**/*OwbTest.java</exclude>
+                    <testExclude>**/*Owb.java</testExclude>
+                    <testExclude>**/*OwbTest.java</testExclude>
                   </testExcludes>
                 </configuration>
               </execution>

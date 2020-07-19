@@ -32,11 +32,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @ContainerPerExecution
-class ContainerPerExecutionHelloServiceTest {
+class ContainerPerExecutionTest {
 
     private static SeContainer cdiContainer;
-    private CreationalContext<ContainerPerExecutionHelloServiceTest> creationalContext;
-    private InjectionTarget<ContainerPerExecutionHelloServiceTest> injectionTarget;
+    private CreationalContext<ContainerPerExecutionTest> creationalContext;
+    private InjectionTarget<ContainerPerExecutionTest> injectionTarget;
 
     @Inject
     private HelloService helloService;
@@ -53,8 +53,8 @@ class ContainerPerExecutionHelloServiceTest {
     @BeforeEach
     void inject() {
         BeanManager beanManager = cdiContainer.getBeanManager();
-        AnnotatedType<ContainerPerExecutionHelloServiceTest> annotatedType
-            = beanManager.createAnnotatedType(ContainerPerExecutionHelloServiceTest.class);
+        AnnotatedType<ContainerPerExecutionTest> annotatedType
+            = beanManager.createAnnotatedType(ContainerPerExecutionTest.class);
         injectionTarget = beanManager.createInjectionTarget(annotatedType);
         creationalContext = beanManager.createCreationalContext(null);
         injectionTarget.inject(this, creationalContext);

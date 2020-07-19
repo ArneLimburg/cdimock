@@ -17,25 +17,26 @@ package rocks.limburg.cdimock;
 
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 import javax.inject.Inject;
 
-import org.apache.openwebbeans.junit5.Cdi;
 import org.junit.jupiter.api.Test;
 
 @OwbClass
-@CdiExclude(classes = { MockConfigurationProvider.class, ContainerPerExecutionTest.class, ContainerPerExecutionOwbTest.class })
-@Cdi
-class ContainerPerClassOwbTest {
-
-    @CdiMock
-    private Configuration mockConfiguration = new TestConfiguration();
+@ContainerPerExecutionOwb
+class ContainerPerExecutionOwbTest {
 
     @Inject
     private HelloService helloService;
 
+    @Inject
+    @ConfigurableMock
+    Configuration mockConfiguration;
+
     @Test
     void hello() {
-        assertEquals("hello mock", helloService.hello(empty()));
+        when(mockConfiguration.getDefaultGreeting()).thenReturn("@TestExecutionScoped mock");
+        assertEquals("hello @TestExecutionScoped mock", helloService.hello(empty()));
     }
 }
