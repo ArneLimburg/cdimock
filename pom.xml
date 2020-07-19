@@ -74,17 +74,17 @@
               <goal>test</goal>
             </goals>
             <configuration>
-              <excludedGroups>multi-class-java-se</excludedGroups>
+              <excludedGroups>container-per-execution</excludedGroups>
             </configuration>
           </execution>
           <execution>
-            <id>multi-class-java-se</id>
+            <id>container-per-execution</id>
             <phase>test</phase>
             <goals>
               <goal>test</goal>
             </goals>
             <configuration>
-              <groups>multi-class-java-se</groups>
+              <groups>container-per-execution</groups>
             </configuration>
           </execution>
         </executions>

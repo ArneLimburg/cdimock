@@ -22,11 +22,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.Tag;
 
-@ExtendWith(CdiMocking.class)
+@EnableCdiMocking
+@Tag("container-per-execution")
 @Target({ANNOTATION_TYPE, TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ExcludeClasses {
-    Class<?>[] value();
+public @interface ContainerPerExecution {
 }

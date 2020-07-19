@@ -33,7 +33,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@ExcludeClasses({ MockConfigurationProvider.class, ContainerPerExcecutionTest.class })
+@CdiExclude(classesAnnotatedWith = ContainerPerExecution.class)
 class ContainerPerClassTest {
 
     private static SeContainer cdiContainer;

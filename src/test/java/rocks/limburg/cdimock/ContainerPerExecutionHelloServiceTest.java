@@ -29,16 +29,14 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-@Tag("multi-class-java-se")
-@EnableCdiMocking
-class ContainerPerExcecutionTest {
+@ContainerPerExecution
+class ContainerPerExecutionHelloServiceTest {
 
     private static SeContainer cdiContainer;
-    private CreationalContext<ContainerPerExcecutionTest> creationalContext;
-    private InjectionTarget<ContainerPerExcecutionTest> injectionTarget;
+    private CreationalContext<ContainerPerExecutionHelloServiceTest> creationalContext;
+    private InjectionTarget<ContainerPerExecutionHelloServiceTest> injectionTarget;
 
     @Inject
     private HelloService helloService;
@@ -55,7 +53,8 @@ class ContainerPerExcecutionTest {
     @BeforeEach
     void inject() {
         BeanManager beanManager = cdiContainer.getBeanManager();
-        AnnotatedType<ContainerPerExcecutionTest> annotatedType = beanManager.createAnnotatedType(ContainerPerExcecutionTest.class);
+        AnnotatedType<ContainerPerExecutionHelloServiceTest> annotatedType
+            = beanManager.createAnnotatedType(ContainerPerExecutionHelloServiceTest.class);
         injectionTarget = beanManager.createInjectionTarget(annotatedType);
         creationalContext = beanManager.createCreationalContext(null);
         injectionTarget.inject(this, creationalContext);

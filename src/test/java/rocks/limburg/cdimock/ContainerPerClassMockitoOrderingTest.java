@@ -38,7 +38,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith({ MockitoExtension.class, CdiMocking.class })
-@ExcludeClasses({ MockConfigurationProvider.class, ContainerPerExcecutionTest.class })
+@CdiExclude(classes = { MockConfigurationProvider.class, ContainerPerExecutionHelloServiceTest.class })
 class ContainerPerClassMockitoOrderingTest {
 
     private static SeContainer cdiContainer;

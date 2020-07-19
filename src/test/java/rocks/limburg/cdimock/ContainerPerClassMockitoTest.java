@@ -38,8 +38,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
-@EnableCdiMocking
-@ExcludeClasses({ MockConfigurationProvider.class, ContainerPerExcecutionTest.class })
+@CdiExclude(classes = { MockConfigurationProvider.class, ContainerPerExecutionHelloServiceTest.class })
 class ContainerPerClassMockitoTest {
 
     private static SeContainer cdiContainer;

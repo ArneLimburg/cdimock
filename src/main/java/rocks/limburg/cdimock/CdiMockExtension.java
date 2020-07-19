@@ -48,7 +48,8 @@ public class CdiMockExtension implements Extension {
 
     private static ThreadLocal<ExtensionContext> beforeAllContext = new ThreadLocal<ExtensionContext>();
 
-    private Set<Class<?>> classesToExclude;
+    private Set<Class<?>> excludedClasses;
+    private Set<Class<? extends Annotation>> excludingAnnotationTypes;
 
     public static void beforeAll(ExtensionContext context) {
         beforeAllContext.set(context);
@@ -63,16 +64,31 @@ public class CdiMockExtension implements Extension {
     }
 
     public void excludeClasses(@Observes ProcessAnnotatedType<?> event) {
-        if (classesToExclude == null) {
-            classesToExclude = getExtensionContext()
+        if (excludedClasses == null) {
+            excludedClasses = getExtensionContext()
                     .flatMap(ExtensionContext::getTestClass)
-                    .flatMap(c -> AnnotationUtils.findAnnotation(c, ExcludeClasses.class))
-                    .map(ExcludeClasses::value)
+                    .flatMap(c -> AnnotationUtils.findAnnotation(c, CdiExclude.class))
+                    .map(CdiExclude::classes)
                     .map(Stream::of)
                     .map(s -> s.collect(toSet()))
                     .orElse(emptySet());
         }
-        if (classesToExclude.contains(event.getAnnotatedType().getJavaClass())) {
+        if (excludingAnnotationTypes == null) {
+            excludingAnnotationTypes = getExtensionContext()
+                    .flatMap(ExtensionContext::getTestClass)
+                    .flatMap(c -> AnnotationUtils.findAnnotation(c, CdiExclude.class))
+                    .map(CdiExclude::classesAnnotatedWith)
+                    .map(Stream::of)
+                    .map(s -> s.collect(toSet()))
+                    .orElse(emptySet());
+        }
+        if (excludedClasses.contains(event.getAnnotatedType().getJavaClass())
+                || event.getAnnotatedType()
+                    .getAnnotations()
+                    .stream()
+                    .filter(a -> excludingAnnotationTypes.contains(a.annotationType()))
+                    .findAny()
+                    .isPresent()) {
             event.veto();
         }
     }

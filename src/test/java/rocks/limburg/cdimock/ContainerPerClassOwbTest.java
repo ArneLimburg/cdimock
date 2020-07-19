@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import org.apache.openwebbeans.junit5.Cdi;
 import org.junit.jupiter.api.Test;
 
-@ExcludeClasses({ MockConfigurationProvider.class, ContainerPerExcecutionTest.class })
+@CdiExclude(classes = { MockConfigurationProvider.class, ContainerPerExecutionHelloServiceTest.class })
 @Cdi
 class ContainerPerClassOwbTest {
 

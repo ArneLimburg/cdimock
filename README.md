@@ -177,12 +177,14 @@ you can define different groups of tests and with maven, the surefire plugin can
 
 In a scenario with different sets of mocks you will need to exclude the mocks you don't need for that scenario.
 Otherwise you would get an ``AmbiguousResolutionException`` for that bean types.
-CdiMock provides the ``@ExcludeClasses`` annotation to support exclusion of classes from a certain deployment.
-The ``@ExcludeClasses`` annotation replaces the ``@EnableCdiMocking`` annotation.
+CdiMock provides the ``@CdiExclude`` annotation to support exclusion of classes from a certain deployment.
+The classes can be specified by name (using the ``classes`` attribute)
+or by the annotation type of an annotation they are annotated with (using the ``classesAnnotatedWith`` attribute).
+*Side note: With the ``@CdiExclude`` annotation present, ``@EnableCdiMocking`` is not required.*
 
 ```
 @Tag("set-of-mocks-1")
-@ExcludeClasses({ SetOfMocks2.class, SetOfMocks3.class })
+@CdiExclude(classes = { SetOfMocks2.class, SetOfMocks3.class })
 class CdiTest {
     ...
 }
@@ -193,7 +195,7 @@ and use them at the tests.
 
 ```
 @Tag("set-of-mocks-1")
-@ExcludeClasses({ SetOfMocks2.class, SetOfMocks3.class })
+@CdiExclude(classesAnnotatedWith = { Scenario2Test.class, Scenario3Test.class })
 @Target({ANNOTATION_TYPE, TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Scenario1Test {
