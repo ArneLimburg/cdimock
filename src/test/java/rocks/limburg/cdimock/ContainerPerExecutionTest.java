@@ -42,7 +42,6 @@ class ContainerPerExecutionTest {
     private HelloService helloService;
 
     @Inject
-    @ConfigurableMock
     Configuration mockConfiguration;
 
     @BeforeAll

@@ -16,16 +16,18 @@
 package rocks.limburg.cdimock;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
 
 import org.mockito.Mockito;
 
-@TestExecutionScoped
+@ApplicationScoped
 @ContainerPerExecution
 public class MockConfigurationProvider {
 
     @Produces
-    @ConfigurableMock
+    @CdiMock
     private Configuration mockConfiguration;
 
     @PostConstruct
@@ -33,9 +35,7 @@ public class MockConfigurationProvider {
         mockConfiguration = Mockito.mock(Configuration.class);
     }
 
-    @Produces
-    @CdiMock
-    public Configuration getMockConfiguration() {
-        return mockConfiguration;
+    public void resetMocks(@Observes @BeforeEach Object event) {
+        Mockito.reset(mockConfiguration);
     }
 }

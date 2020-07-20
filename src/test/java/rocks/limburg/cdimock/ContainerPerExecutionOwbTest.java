@@ -31,7 +31,6 @@ class ContainerPerExecutionOwbTest {
     private HelloService helloService;
 
     @Inject
-    @ConfigurableMock
     Configuration mockConfiguration;
 
     @Test

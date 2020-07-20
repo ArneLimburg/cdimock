@@ -98,16 +98,25 @@ In such scenario it is not eligible to define mock types per test class. Instead
 a set of mocks for the whole test execution (the same mock types for every test in that execution).
 When you define mocks as described above, undefined behavior occurs (i.e. only the mocks of the first executed tests will be configured).
 Instead of that you have to define CDI beans for your mocks and annotate them with ``@CdiMock``.
+CdiMock provides CDI events of type ``ExtensionContext`` for the JUnit lifecycle events
+with the respective qualifiers ``@BeforeAll``, ``@BeforeEach``, ``@AfterEach`` and ``@AfterAll``.
+They can be used to reset the mocks for every test.
 
 ```
+@ApplicationScoped
 public class MockConfigurationProvider {
-
-    ...
 
     @Produces
     @CdiMock
-    public Configuration getMockConfiguration() {
-        return mockConfiguration;
+    private Configuration mockConfiguration;
+
+    @PostConstruct
+    public void initMocks() {
+        mockConfiguration = Mockito.mock(Configuration.class);
+    }
+
+    public void resetMocks(@Observes @BeforeEach Object event) {
+        Mockito.reset(mockConfiguration);
     }
 }
 ```
@@ -126,6 +135,9 @@ Enable mocking by placing a ``beans.xml`` in the ``META-INF`` folder of your tes
   </alternatives>
 </beans>
 ```
+
+With such configuration mocks can be injected into the test instance like any other CDI bean
+and then can be configured (i.e. using Mockito) as desired.
 
 ### Using multiple sets of mocks
 
