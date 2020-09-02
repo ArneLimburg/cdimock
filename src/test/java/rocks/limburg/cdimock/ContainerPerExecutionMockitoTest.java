@@ -21,49 +21,40 @@ import static org.mockito.Mockito.when;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.se.SeContainer;
-import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
 import javax.inject.Inject;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
-@MockitoInjection
-@CdiExclude(classes = { MockConfigurationProvider.class, ContainerPerExecutionTest.class }, classesAnnotatedWith = OwbClass.class)
-@DisplayName("Test that starts one container per test class with mockito")
-class ContainerPerClassMockitoTest {
+@ContainerPerExecutionMockito
+@CdiExclude(classesAnnotatedWith = {ContainerPerExecution.class, ContainerPerExecutionOwb.class})
+class ContainerPerExecutionMockitoTest {
 
     private static SeContainer cdiContainer;
-    private CreationalContext<ContainerPerClassMockitoTest> creationalContext;
-    private InjectionTarget<ContainerPerClassMockitoTest> injectionTarget;
-
-    @Mock
-    private Configuration mockConfiguration;
+    private CreationalContext<ContainerPerExecutionMockitoTest> creationalContext;
+    private InjectionTarget<ContainerPerExecutionMockitoTest> injectionTarget;
 
     @Inject
     private HelloService helloService;
 
-    @BeforeAll
-    static void startCdiContainer() {
-        cdiContainer = SeContainerInitializer.newInstance().initialize();
-    }
+    @Inject
+    Configuration mockConfiguration;
 
-    @AfterAll
-    static void closeCdiContainer() {
-        cdiContainer.close();
+    @BeforeAll
+    static void initializeCdiContainer() {
+        cdiContainer = CdiContainer.instance();
     }
 
     @BeforeEach
     void inject() {
         BeanManager beanManager = cdiContainer.getBeanManager();
-        AnnotatedType<ContainerPerClassMockitoTest> annotatedType = beanManager.createAnnotatedType(ContainerPerClassMockitoTest.class);
+        AnnotatedType<ContainerPerExecutionMockitoTest> annotatedType
+            = beanManager.createAnnotatedType(ContainerPerExecutionMockitoTest.class);
         injectionTarget = beanManager.createInjectionTarget(annotatedType);
         creationalContext = beanManager.createCreationalContext(null);
         injectionTarget.inject(this, creationalContext);
@@ -78,14 +69,7 @@ class ContainerPerClassMockitoTest {
 
     @Test
     void hello() {
-        when(mockConfiguration.getDefaultGreeting()).thenReturn("mockito");
-        assertEquals("hello mockito", helloService.hello(empty()));
-    }
-
-    @Test
-    @DisplayName("every test gets its own mock instance")
-    void differentMockInstancesInjectedPerTest() {
-        when(mockConfiguration.getDefaultGreeting()).thenReturn("new mock instance");
-        assertEquals("hello new mock instance", helloService.hello(empty()));
+        when(mockConfiguration.getDefaultGreeting()).thenReturn("@TestExecutionScoped mock");
+        assertEquals("hello @TestExecutionScoped mock", helloService.hello(empty()));
     }
 }

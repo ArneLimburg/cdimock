@@ -15,25 +15,22 @@
  */
 package rocks.limburg.cdimock;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.Vetoed;
 
-@ApplicationScoped
-@ContainerPerExecution
-public class MockConfigurationProvider {
+@Vetoed
+public class MockConfiguration extends Configuration {
 
-    @Produces
-    @CdiMock
-    private MockConfiguration mockConfiguration;
+    private String mockGreeting;
 
-    @PostConstruct
-    public void initMocks() {
-        mockConfiguration = new MockConfiguration();
+    public String getDefaultGreeting() {
+        return mockGreeting != null ? mockGreeting : super.getDefaultGreeting();
     }
 
-    public void resetMocks(@Observes @BeforeEach Object event) {
-        mockConfiguration.resetMockGreeting();
+    public void setMockGreeting(String greeting) {
+        mockGreeting = greeting;
+    }
+
+    public void resetMockGreeting() {
+        mockGreeting = null;
     }
 }

@@ -15,25 +15,19 @@
  */
 package rocks.limburg.cdimock;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Produces;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.TYPE;
 
-@ApplicationScoped
-@ContainerPerExecution
-public class MockConfigurationProvider {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    @Produces
-    @CdiMock
-    private MockConfiguration mockConfiguration;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-    @PostConstruct
-    public void initMocks() {
-        mockConfiguration = new MockConfiguration();
-    }
+@ExtendWith(CdiMocking.class)
+@Target({ANNOTATION_TYPE, TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface MockitoBeans {
 
-    public void resetMocks(@Observes @BeforeEach Object event) {
-        mockConfiguration.resetMockGreeting();
-    }
+    Class<?>[] types();
 }

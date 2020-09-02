@@ -89,7 +89,7 @@ to start your CDI container and enable certain scopes in your tests.
 
 Since Arquillian currently does not support JUnit 5, CdiMock has no integration with Arquillian.
 
-## Running a CDI Container for multiple test classes
+## Running one CDI Container for multiple test classes
 
 When you have a large test suite with many CDI tests, it is inappropriate to start and stop the cdi container
 for every single test class. It will decrease build performance in an inacceptable amount.
@@ -138,6 +138,18 @@ Enable mocking by placing a ``beans.xml`` in the ``META-INF`` folder of your tes
 
 With such configuration mocks can be injected into the test instance like any other CDI bean
 and then can be configured (i.e. using Mockito) as desired.
+
+### Automatically inject Mockito mocks
+
+In the previous section ``MockConfigurationProvider`` had to be implemented manually. However, when _Mockito_ is in the classpath
+you can inject such mocks automatically by declaring their types via the ``@MockitoBeans`` annotation.
+
+```
+@MockitoBeans(types = Configuration.class)
+class CdiTest {
+    ...
+}
+```
 
 ### Using multiple sets of mocks
 

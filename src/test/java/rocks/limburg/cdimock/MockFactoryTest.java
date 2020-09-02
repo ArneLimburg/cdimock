@@ -27,11 +27,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-import rocks.limburg.cdimock.CdiMockExtension.MockFactory;
+import rocks.limburg.cdimock.CdiMockExtension.FieldMockFactory;
 
 public class MockFactoryTest {
 
-    MockFactory mockFactory;
+    FieldMockFactory mockFactory;
 
     ExtensionContext context;
     @CdiMock
@@ -39,7 +39,7 @@ public class MockFactoryTest {
 
     @BeforeEach
     public void initializeMockFactory() {
-        mockFactory = new MockFactory();
+        mockFactory = new FieldMockFactory();
         context = mock(ExtensionContext.class);
         EventContext<ExtensionContext> eventContext = mock(EventContext.class);
         when(eventContext.getEvent()).thenReturn(context);

@@ -16,18 +16,23 @@
 package rocks.limburg.cdimock;
 
 import static java.util.Arrays.stream;
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
@@ -43,6 +48,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.platform.commons.util.AnnotationUtils;
+import org.mockito.Mockito;
 
 public class CdiMockExtension implements Extension {
 
@@ -50,6 +56,7 @@ public class CdiMockExtension implements Extension {
 
     private Set<Class<?>> excludedClasses;
     private Set<Class<? extends Annotation>> excludingAnnotationTypes;
+    private Map<Class<?>, Object> mockitoBeans;
 
     public static void beforeAll(ExtensionContext context) {
         beforeAllContext.set(context);
@@ -111,7 +118,36 @@ public class CdiMockExtension implements Extension {
     }
 
     private void addMockBeans(AfterBeanDiscovery event, BeanManager beanManager) {
-        MockFactory mockFactory = new MockFactory();
+        if (mockitoBeans == null) {
+            Optional<MockitoBeans> mockitoBeansAnnotation = getExtensionContext()
+                    .flatMap(ExtensionContext::getTestClass)
+                    .flatMap(c -> AnnotationUtils.findAnnotation(c, MockitoBeans.class));
+            if (mockitoBeansAnnotation.isPresent()) {
+                MockitoMockFactory mockFactory = new MockitoMockFactory();
+                mockitoBeans = getExtensionContext()
+                        .flatMap(ExtensionContext::getTestClass)
+                        .flatMap(c -> AnnotationUtils.findAnnotation(c, MockitoBeans.class))
+                        .map(MockitoBeans::types)
+                        .map(Stream::of)
+                        .map(s -> s.collect(toMap(Function.identity(), mockFactory::mock)))
+                        .orElse(emptyMap());
+                mockitoBeans.entrySet().forEach(entry -> event
+                        .addBean()
+                        .alternative(true)
+                        .scope(Dependent.class)
+                        .addType(entry.getKey())
+                        .addQualifiers(stream(entry.getKey().getAnnotations())
+                                .filter(annotation -> beanManager.isQualifier(annotation.annotationType()))
+                                .toArray(Annotation[]::new))
+                        .addStereotype(CdiMock.class)
+                        .createWith(c -> entry.getValue()));
+                event.<ExtensionContext>addObserverMethod()
+                    .observedType(ExtensionContext.class)
+                    .addQualifier(new BeforeEach.Literal())
+                    .notifyWith(e -> mockitoBeans.values().forEach(mockFactory::reset));
+            }
+        }
+        FieldMockFactory mockFactory = new FieldMockFactory();
         getExtensionContext().flatMap(ExtensionContext::getTestClass).ifPresent(classUnderTest -> {
             Set<Field> mockTypes = new HashSet<>();
             collectMockTypes(classUnderTest, mockTypes);
@@ -129,7 +165,7 @@ public class CdiMockExtension implements Extension {
         event.<ExtensionContext>addObserverMethod()
             .observedType(ExtensionContext.class)
             .addQualifier(new BeforeEach.Literal())
-            .notifyWith(mockFactory::setExtensionContext);
+            .notifyWith(e -> mockFactory.setExtensionContext(e));
     }
 
     private void addTestMethodScope(AfterBeanDiscovery event) {
@@ -181,7 +217,7 @@ public class CdiMockExtension implements Extension {
                     .isPresent();
     }
 
-    static class MockFactory {
+    static class FieldMockFactory {
 
         private ExtensionContext context;
 
@@ -210,6 +246,16 @@ public class CdiMockExtension implements Extension {
 
         private <E extends Exception> E convert(Exception e) throws E {
             return (E)e;
+        }
+    }
+
+    static class MockitoMockFactory {
+        Object mock(Class<?> type) {
+            return Mockito.mock(type);
+        }
+
+        void reset(Object mock) {
+            Mockito.reset(mock);
         }
     }
 }

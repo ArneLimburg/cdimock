@@ -17,7 +17,6 @@ package rocks.limburg.cdimock;
 
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.se.SeContainer;
@@ -32,6 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @ContainerPerExecution
+@CdiExclude(classesAnnotatedWith = {MockitoInjection.class, ContainerPerExecutionMockito.class})
 class ContainerPerExecutionTest {
 
     private static SeContainer cdiContainer;
@@ -42,7 +42,7 @@ class ContainerPerExecutionTest {
     private HelloService helloService;
 
     @Inject
-    Configuration mockConfiguration;
+    MockConfiguration mockConfiguration;
 
     @BeforeAll
     static void initializeCdiContainer() {
@@ -68,7 +68,7 @@ class ContainerPerExecutionTest {
 
     @Test
     void hello() {
-        when(mockConfiguration.getDefaultGreeting()).thenReturn("@TestExecutionScoped mock");
+        mockConfiguration.setMockGreeting("@TestExecutionScoped mock");
         assertEquals("hello @TestExecutionScoped mock", helloService.hello(empty()));
     }
 }

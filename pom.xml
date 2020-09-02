@@ -35,6 +35,13 @@
       <version>2.0.2</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>3.4.2</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -74,7 +81,7 @@
               <goal>test</goal>
             </goals>
             <configuration>
-              <excludedGroups>container-per-execution,container-per-execution-owb</excludedGroups>
+              <excludedGroups>container-per-execution,container-per-execution-owb,container-per-execution-mockito,container-per-execution-owb-mockito</excludedGroups>
             </configuration>
           </execution>
           <execution>
@@ -212,6 +219,16 @@
             <version>3.0.0-M5</version>
             <executions>
               <execution>
+                <id>container-per-execution</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <configuration>
+                  <groups>container-per-execution</groups>
+                </configuration>
+              </execution>
+              <execution>
                 <id>container-per-execution-owb</id>
                 <phase>test</phase>
                 <goals>
@@ -219,6 +236,59 @@
                 </goals>
                 <configuration>
                   <groups>container-per-execution-owb</groups>
+                </configuration>
+              </execution>
+              <execution>
+                <id>container-per-execution-mockito</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <configuration>
+                  <groups>container-per-execution-mockito</groups>
+                </configuration>
+              </execution>
+              <execution>
+                <id>container-per-execution-owb-mockito</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <configuration>
+                  <groups>container-per-execution-owb-mockito</groups>
+                </configuration>
+              </execution>
+              <execution>
+                <id>container-per-execution-exclude-mockito</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <configuration>
+                  <groups>container-per-execution</groups>
+                  <excludes>
+                    <exclude>**/*Mockito*</exclude>
+                  </excludes>
+                  <classpathDependencyExcludes>
+                    <classpathDependencyExclude>org.mockito:mockito-core</classpathDependencyExclude>
+                  </classpathDependencyExcludes>
+                </configuration>
+              </execution>
+              <execution>
+                <id>container-per-execution-owb-exclude-mockito</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <configuration>
+                  <groups>container-per-execution-owb</groups>
+                  <excludedGroups />
+                  <excludes>
+                    <exclude>**/*Mockito*</exclude>
+                  </excludes>
+                  <classpathDependencyExcludes>
+                    <classpathDependencyExclude>org.mockito:mockito-core</classpathDependencyExclude>
+                  </classpathDependencyExcludes>
                 </configuration>
               </execution>
             </executions>
@@ -249,9 +319,38 @@
                 </goals>
                 <configuration>
                   <testExcludes>
+                    <testExclude>**/ContainerPerExecutionOwb.java</testExclude>
                     <testExclude>**/*Owb.java</testExclude>
                     <testExclude>**/*OwbTest.java</testExclude>
+                    <testExclude>**/*OwbMockito.java</testExclude>
+                    <testExclude>**/*OwbMockitoTest.java</testExclude>
                   </testExcludes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+            <executions>
+              <execution>
+                <id>container-per-execution</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <configuration>
+                  <groups>container-per-execution</groups>
+                </configuration>
+              </execution>
+              <execution>
+                <id>container-per-execution-mockito</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <configuration>
+                  <groups>container-per-execution-mockito</groups>
                 </configuration>
               </execution>
             </executions>
