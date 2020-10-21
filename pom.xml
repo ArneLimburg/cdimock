@@ -29,6 +29,15 @@
     <developerConnection>scm:git:ssh://github.com:ArneLimburg/cdimock.git</developerConnection>
   </scm>
 
+  <developers>
+    <developer>
+      <name>Arne Limburg</name>
+      <email>arne@apache.org</email>
+      <organization>The Apache Software Foundation</organization>
+      <url>https://www.apache.org/</url>
+    </developer>
+  </developers>
+
   <distributionManagement>
     <snapshotRepository>
       <id>ossrh</id>
