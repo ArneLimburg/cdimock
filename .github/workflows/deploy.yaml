@@ -26,7 +26,6 @@ jobs:
           server-password: OSSRH_PASSWORD
           gpg-private-key: GPG_PRIVATE_KEY
           gpg-passphrase: GPG_PASSPHRASE
-        env:
           
       - id: setup-maven
         name: Cache Maven packages
