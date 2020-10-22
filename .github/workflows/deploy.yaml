@@ -22,9 +22,8 @@ jobs:
         with:
           java-version: 11
           server-id: ossrh
-          server-username: OSSRH_USERNAME
-          server-password: OSSRH_PASSWORD
-          
+          server-username: '${OSSRH_USERNAME}'
+          server-password: '${OSSRH_PASSWORD}'
       - id: setup-maven
         name: Cache Maven packages
         uses: actions/cache@v2
