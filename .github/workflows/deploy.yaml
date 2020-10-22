@@ -24,7 +24,6 @@ jobs:
           server-id: ossrh
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
-          gpg-passphrase: GPG_PASSPHRASE
           
       - id: setup-maven
         name: Cache Maven packages
