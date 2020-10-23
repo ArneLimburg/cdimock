@@ -280,12 +280,12 @@
                     <limit>
                       <counter>METHOD</counter>
                       <value>COVEREDRATIO</value>
-                      <minimum>1</minimum>
+                      <minimum>1.00</minimum>
                     </limit>
                     <limit>
                       <counter>CLASS</counter>
                       <value>COVEREDRATIO</value>
-                      <minimum>1</minimum>
+                      <minimum>1.00</minimum>
                     </limit>
                   </limits>
                 </rule>
