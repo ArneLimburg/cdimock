@@ -32,6 +32,9 @@ jobs:
         uses: s4u/maven-settings-action@v2.2.0
         with:
           servers: '[{"id": "ossrh", "username": "${OSSRH_USERNAME}", "password": "${OSSRH_PASSWORD}"}]'
+      - id: weld-test
+        name: Test with Weld
+        run: mvn package -Pweld
       - id: maven-deploy
         name: Deploy with Maven
         run: mvn -Dgpg.passphrase=$GPG_PASSPHRASE clean deploy
