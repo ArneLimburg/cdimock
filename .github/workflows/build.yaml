@@ -24,6 +24,6 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Test with OpenWebBeans
-        run: mvn package
+        run: mvn clean package
       - name: Test with Weld
-        run: mvn package -Pweld
+        run: mvn clean package -Pweld
