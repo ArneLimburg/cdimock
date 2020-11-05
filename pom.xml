@@ -412,6 +412,30 @@
       <build>
         <plugins>
           <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>3.1.2</version>
+            <executions>
+              <execution>
+                <id>unpack-annotation</id>
+                <phase>generate-test-resources</phase>
+                <goals>
+                  <goal>unpack</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.apache.openwebbeans</groupId>
+                      <artifactId>openwebbeans-junit5</artifactId>
+                      <version>2.0.17</version>
+                    </artifactItem>
+                  </artifactItems>
+                  <includes>org/apache/openwebbeans/junit5/Cdi.class</includes>
+                  <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
             <version>3.8.1</version>
             <executions>
@@ -423,7 +447,6 @@
                 </goals>
                 <configuration>
                   <testExcludes>
-                    <testExclude>**/ContainerPerExecutionOwb.java</testExclude>
                     <testExclude>**/*Owb.java</testExclude>
                     <testExclude>**/*OwbTest.java</testExclude>
                     <testExclude>**/*OwbMockito.java</testExclude>
