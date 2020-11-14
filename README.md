@@ -1,3 +1,5 @@
+![build](https://github.com/ArneLimburg/microjpa/workflows/Maven%20Deploy/badge.svg) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=security_rating)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=bugs)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=coverage)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock)
+
 # CdiMock
 
 CdiMock is a JUnit 5 extension to support mocking in CDI tests.

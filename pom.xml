@@ -55,6 +55,11 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <jupiter.version>5.6.2</jupiter.version>
+
+    <sonar.projectKey>ArneLimburg_cdimock</sonar.projectKey>
+    <sonar.organization>arnelimburg-github</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.coverage.jacoco.xmlReportPaths>${project.build.outputDirectory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
 
   <dependencies>
