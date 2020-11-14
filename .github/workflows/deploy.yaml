@@ -43,7 +43,7 @@ jobs:
         name: Test with Weld
         run: mvn clean package -Pweld
       - id: maven-deploy
-        name: Deploy with Maven
+        name: Test with OpenWebBeans and Deploy with Maven
         run: mvn -Dgpg.passphrase=$GPG_PASSPHRASE clean verify jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar deploy
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
