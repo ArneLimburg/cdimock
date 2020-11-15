@@ -42,9 +42,15 @@ jobs:
       - id: weld-test
         name: Test with Weld
         run: mvn clean package -Pweld
-      - id: maven-deploy
-        name: Test with OpenWebBeans and Deploy with Maven
-        run: mvn -Dgpg.passphrase=$GPG_PASSPHRASE clean verify jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar deploy
+      - id: owb-test
+        name: Test with OpenWebBeans
+        run: mvn clean package jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+      - id: maven-release
+        name: Release
+        uses: qcastel/github-actions-maven-release@v1.12.1
+        with:
+          access-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          maven-args: "-Dgpg.passphrase=$GPG_PASSPHRASE"
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
