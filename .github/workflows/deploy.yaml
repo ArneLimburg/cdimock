@@ -45,6 +45,8 @@ jobs:
       - id: owb-test
         name: Test with OpenWebBeans
         run: mvn clean package jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - id: maven-release
         name: Release
         uses: qcastel/github-actions-maven-release@v1.12.1
