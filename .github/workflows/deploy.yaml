@@ -57,7 +57,7 @@ jobs:
         name: Release
         run: |
           mvn -B release:prepare
-          mvn -Dgpg.passphrase=$GPG_PASSPHRASE release:perform
+          mvn -Dgpg.passphrase=$GPG_PASSPHRASE -DreleaseProfiles=owb,release release:perform
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
