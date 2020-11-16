@@ -3,7 +3,7 @@ name: build # Build and release master
 on:
   push:
     branches:
-      - master
+      - release
 
 jobs:
   build:
@@ -50,7 +50,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - id: maven-release
         name: Release
-        run: mvn -B release:prepare release:perform -Dgpg.passphrase=$GPG_PASSPHRASE
+        run: mvn -B -Dgpg.passphrase=$GPG_PASSPHRASE release:prepare release:perform
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
