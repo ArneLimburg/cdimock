@@ -1,10 +1,20 @@
-![build](https://github.com/ArneLimburg/cdimock/workflows/build/badge.svg) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=security_rating)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=bugs)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=coverage)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock)
+![build](https://github.com/ArneLimburg/cdimock/workflows/build/badge.svg) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=security_rating)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=bugs)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=coverage)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![Maintenance](https://img.shields.io/badge/Maintained-yes-brightgreen.svg)](https://github.com/openknowledge/keycloak-admin-client-adapter/graphs/commit-activity)
 
 # CdiMock
 
 CdiMock is a JUnit 5 extension to support mocking in CDI tests.
 
 ## Setup
+
+Add the following maven dependency to your ``pom.xml``
+
+```
+    <dependency>
+      <groupId>rocks.limburg.cdimock</groupId>
+      <artifactId>cdimock</artifactId>
+      <version>0.9.5</version>
+    </dependency>
+```
 
 In a JUnit 5 test thats starts a CDI container (see [here](cdi-unit-test.md) how to do that),
 simply add ``@EnableCdiMocking`` or ``@ExtendWith(CdiMocking.class)`` at class level,
