@@ -51,7 +51,9 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSWORD }}
       - id: maven-release
         name: Release
-        run: mvn -B -Dgpg.passphrase=$GPG_PASSPHRASE release:prepare release:perform
+        run: |
+          mvn -B release:prepare
+          mvn -Dgpg.passphrase=$GPG_PASSPHRASE release:perform
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
