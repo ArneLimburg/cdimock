@@ -50,12 +50,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - id: maven-release
         name: Release
-        uses: qcastel/github-actions-maven-release@v1.12.1
-        with:
-          access-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          maven-args: "-Dgpg.passphrase=$GPG_PASSPHRASE"
+        run: mvn -B release:prepare release:perform -Dgpg.passphrase=$GPG_PASSPHRASE
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
