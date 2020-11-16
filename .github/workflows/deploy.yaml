@@ -13,6 +13,7 @@ jobs:
     steps:
       - id: checkout
         uses: actions/checkout@v2
+      - id: setup-git
         run: |
           git config user.name arne
           git config user.email arne@apache.org
