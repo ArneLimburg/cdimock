@@ -13,6 +13,9 @@ jobs:
     steps:
       - id: checkout
         uses: actions/checkout@v2
+        run: |
+          git config user.name arne
+          git config user.email arne@apache.org
       - id: install-key
         name: Install gpg secret key
         run: |
