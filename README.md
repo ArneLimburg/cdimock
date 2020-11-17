@@ -1,4 +1,4 @@
-![build](https://github.com/ArneLimburg/cdimock/workflows/build/badge.svg) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=security_rating)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=bugs)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=coverage)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![Maintenance](https://img.shields.io/badge/Maintained-yes-brightgreen.svg)](https://github.com/openknowledge/keycloak-admin-client-adapter/graphs/commit-activity)
+![build](https://github.com/ArneLimburg/cdimock/workflows/build/badge.svg) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=security_rating)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=bugs)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=ArneLimburg_cdimock&metric=coverage)](https://sonarcloud.io/dashboard?id=ArneLimburg_cdimock) [![Maintenance](https://img.shields.io/badge/Maintained-yes-brightgreen.svg)](https://github.com/ArneLimburg/cdimock/graphs/commit-activity)
 
 # CdiMock
 
@@ -12,7 +12,7 @@ Add the following maven dependency to your ``pom.xml``
     <dependency>
       <groupId>rocks.limburg.cdimock</groupId>
       <artifactId>cdimock</artifactId>
-      <version>0.9.7</version>
+      <version>0.9.9</version>
     </dependency>
 ```
 
