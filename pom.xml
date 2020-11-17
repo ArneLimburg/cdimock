@@ -5,7 +5,7 @@
 
   <groupId>rocks.limburg.cdimock</groupId>
   <artifactId>cdimock</artifactId>
-  <version>0.9.8-SNAPSHOT</version>
+  <version>0.9.8</version>
 
   <name>cdimock</name>
   <url>http://cdimock.limburg.rocks</url>
@@ -24,7 +24,7 @@
     <url>https://github.com/ArneLimburg/cdimock</url>
     <connection>scm:git:git://github.com/ArneLimburg/cdimock.git</connection>
     <developerConnection>scm:git:https://github.com/ArneLimburg/cdimock.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>0.9.8</tag>
   </scm>
 
   <developers>
