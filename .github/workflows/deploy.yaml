@@ -56,7 +56,7 @@ jobs:
       - id: maven-release
         name: Release
         run: |
-          mvn -B release:prepare
+          mvn -B -DreleaseProfiles=owb,prepare release:prepare
           mvn release:perform -DreleaseProfiles=owb,release -Darguments=-Dgpg.passphrase=$GPG_PASSPHRASE
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
