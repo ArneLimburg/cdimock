@@ -5,7 +5,7 @@
 
   <groupId>rocks.limburg.cdimock</groupId>
   <artifactId>cdimock</artifactId>
-  <version>0.9.10-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
 
   <name>cdimock</name>
   <url>http://cdimock.limburg.rocks</url>
