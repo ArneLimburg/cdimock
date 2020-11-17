@@ -12,7 +12,7 @@ Add the following maven dependency to your ``pom.xml``
     <dependency>
       <groupId>rocks.limburg.cdimock</groupId>
       <artifactId>cdimock</artifactId>
-      <version>0.9.5</version>
+      <version>0.9.7</version>
     </dependency>
 ```
 
