@@ -26,10 +26,10 @@ Every bean of that type in your deployment then will be replaced by the content 
 class CdiTest {
 
     @CdiMock
-    private Configuration mockConfiguration = new TestConfiguration();
+    Configuration mockConfiguration = new TestConfiguration();
 
     @Inject
-    private HelloService helloService;
+    HelloService helloService;
 
     ... // setup CDI container here
 
@@ -45,10 +45,15 @@ class CdiTest {
 If you want to use Mockito for mocking, you can combine the MockitoExtension for JUnit 5 with the CdiMocking extension.
 It is **necessary** that the MockitoExtension is registered **before** the CdiMocking extension.
 This can be done by declaring both extensions via ``@ExtendWith`` in the appropriate order.
+You can then use Mockito's ``@Mock`` annotation. Mockito then will inject the mocks and CdiMock will pick them up as CDI beans. 
 
 ```
 @ExtendWith({MockitoExtension.class, CdiMocking.class})
 class CdiTest {
+
+    @Mock
+    Configuration mockConfiguration;
+
     ...
 }
 ```
@@ -58,7 +63,10 @@ You can also place ``@MockitoSettings`` above ``@EnableCdiMocking`` as current c
 @MockitoSettings
 @EnableCdiMocking
 class CdiTest {
-    ...
+
+    @Mock
+    Configuration mockConfiguration;
+
 }
 ```
 **Note** that this behavior is **not** specified by the jvm spec so it may change in upcoming releases without notice.
