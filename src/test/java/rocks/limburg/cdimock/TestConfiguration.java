@@ -15,7 +15,7 @@
  */
 package rocks.limburg.cdimock;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 @Vetoed
 public class TestConfiguration extends Configuration {
