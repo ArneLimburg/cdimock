@@ -5,7 +5,7 @@
 
   <groupId>rocks.limburg.cdimock</groupId>
   <artifactId>cdimock</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
 
   <name>cdimock</name>
   <url>http://cdimock.limburg.rocks</url>
@@ -52,7 +52,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <jupiter.version>5.6.2</jupiter.version>
+    <openwebbeans.version>4.0.1</openwebbeans.version>
 
     <sonar.projectKey>ArneLimburg_cdimock</sonar.projectKey>
     <sonar.organization>arnelimburg-github</sonar.organization>
@@ -60,22 +60,39 @@
     <sonar.coverage.jacoco.xmlReportPaths>${project.build.outputDirectory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>5.10.1</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-bom</artifactId>
+        <version>5.8.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>${jupiter.version}</version>
     </dependency>
     <dependency>
       <groupId>jakarta.enterprise</groupId>
       <artifactId>jakarta.enterprise.cdi-api</artifactId>
-      <version>2.0.2</version>
+      <version>3.0.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>3.4.2</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -83,13 +100,11 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>${jupiter.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>3.4.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -306,14 +321,54 @@
         <dependency>
           <groupId>org.apache.openwebbeans</groupId>
           <artifactId>openwebbeans-se</artifactId>
-          <version>2.0.17</version>
+          <classifier>jakarta</classifier>
+          <version>2.0.27</version>
+          <scope>test</scope>
+          <exclusions>
+            <exclusion>
+              <groupId>org.apache.openwebbeans</groupId>
+              <artifactId>openwebbeans-impl</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.apache.openwebbeans</groupId>
+              <artifactId>openwebbeans-spi</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.openwebbeans</groupId>
+          <artifactId>openwebbeans-spi</artifactId>
+          <version>2.0.27</version>
+          <classifier>jakarta</classifier>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.openwebbeans</groupId>
+          <artifactId>openwebbeans-impl</artifactId>
+          <version>2.0.27</version>
+          <classifier>jakarta</classifier>
           <scope>test</scope>
         </dependency>
         <dependency>
           <groupId>org.apache.openwebbeans</groupId>
           <artifactId>openwebbeans-junit5</artifactId>
-          <version>2.0.17</version>
+          <version>2.0.27</version>
+          <classifier>jakarta</classifier>
           <scope>test</scope>
+          <exclusions>
+            <exclusion>
+              <groupId>org.apache.openwebbeans</groupId>
+              <artifactId>openwebbeans-impl</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.apache.openwebbeans</groupId>
+              <artifactId>openwebbeans-spi</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.apache.openwebbeans</groupId>
+              <artifactId>openwebbeans-se</artifactId>
+            </exclusion>
+          </exclusions>
         </dependency>
       </dependencies>
       <build>
@@ -406,7 +461,7 @@
         <dependency>
           <groupId>org.jboss.weld.se</groupId>
           <artifactId>weld-se-core</artifactId>
-          <version>3.1.4.Final</version>
+          <version>4.0.3.Final</version>
           <scope>test</scope>
         </dependency>
       </dependencies>
@@ -427,10 +482,11 @@
                     <artifactItem>
                       <groupId>org.apache.openwebbeans</groupId>
                       <artifactId>openwebbeans-junit5</artifactId>
-                      <version>2.0.17</version>
+                      <classifier>jakarta</classifier>
+                      <version>2.0.27</version>
                     </artifactItem>
                   </artifactItems>
-                  <includes>org/apache/openwebbeans/junit5/Cdi.class</includes>
+                  <include>org/apache/openwebbeans/junit5/Cdi.class,org/apache/openwebbeans/junit5/Cdi$OnStart.class,org/apache/openwebbeans/junit5/Cdi$Property.class</include>
                   <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
                 </configuration>
               </execution>
