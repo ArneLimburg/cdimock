@@ -18,7 +18,7 @@ package rocks.limburg.cdimock;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.junit.jupiter.api.Test;
 

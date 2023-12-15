@@ -18,12 +18,12 @@ package rocks.limburg.cdimock;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.se.SeContainer;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.InjectionTarget;
-import javax.inject.Inject;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.se.SeContainer;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.inject.Inject;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
