@@ -53,6 +53,7 @@ import org.mockito.Mockito;
 public class CdiMockExtension implements Extension {
 
     private static ThreadLocal<ExtensionContext> beforeAllContext = new ThreadLocal<ExtensionContext>();
+    private static ExtensionContext latestExtensionContext;
 
     private Set<Class<?>> excludedClasses;
     private Set<Class<? extends Annotation>> excludingAnnotationTypes;
@@ -60,14 +61,19 @@ public class CdiMockExtension implements Extension {
 
     public static void beforeAll(ExtensionContext context) {
         beforeAllContext.set(context);
+        latestExtensionContext = context;
     }
 
     public static void afterAll(ExtensionContext context) {
+        ExtensionContext beforeContext = beforeAllContext.get();
         beforeAllContext.remove();
+        if (beforeContext == latestExtensionContext) {
+            latestExtensionContext = null;
+        }
     }
 
     public Optional<ExtensionContext> getExtensionContext() {
-        return ofNullable(beforeAllContext.get());
+        return ofNullable(beforeAllContext.get()).or(() -> ofNullable(latestExtensionContext));
     }
 
     public void excludeClasses(@Observes ProcessAnnotatedType<?> event) {
