@@ -107,12 +107,12 @@ public class CdiMockExtension implements Extension {
     }
 
     public void fireBeforeAll(@Observes AfterDeploymentValidation event, BeanManager beanManager) {
-        getExtensionContext().ifPresent(context -> beanManager.fireEvent(context, new BeforeAll.Literal()));
+        getExtensionContext().ifPresent(context -> beanManager.getEvent().select(new BeforeAll.Literal()).fire(context));
     }
 
     public void fireAfterAll(@Observes BeforeShutdown event, BeanManager beanManager) {
         getExtensionContext().ifPresent(context -> {
-            beanManager.fireEvent(context, new AfterAll.Literal());
+            beanManager.getEvent().select(new AfterAll.Literal()).fire(context);
             removeBeanManager();
         });
     }
