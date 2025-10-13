@@ -41,19 +41,19 @@ public class CdiMocking implements BeforeAllCallback, BeforeEachCallback, AfterE
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         Optional<BeanManager> beanManager = getBeanManager(of(context));
-        beanManager.ifPresent(b -> b.fireEvent(context, new BeforeEach.Literal()));
+        beanManager.ifPresent(b -> b.getEvent().select(new BeforeEach.Literal()).fire(context));
     }
 
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
         Optional<BeanManager> beanManager = getBeanManager(of(context));
-        beanManager.ifPresent(b -> b.fireEvent(context, new AfterEach.Literal()));
+        beanManager.ifPresent(b -> b.getEvent().select(new AfterEach.Literal()).fire(context));
     }
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
         Optional<BeanManager> beanManager = getBeanManager(of(context));
-        beanManager.ifPresent(b -> b.fireEvent(context, new AfterAll.Literal()));
+        beanManager.ifPresent(b -> b.getEvent().select(new AfterAll.Literal()).fire(context));
         CdiMockExtension.afterAll(context);
     }
 
