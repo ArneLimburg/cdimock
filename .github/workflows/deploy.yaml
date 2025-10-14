@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - id: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - id: setup-git
         run: |
           git config user.name arne
@@ -24,45 +24,29 @@ jobs:
         run: |
           cat <(echo -e "${{ secrets.GPG_SECRET_KEY }}") | gpg --batch --import
       - id: install-jdk
-        name: Set up JDK 11
-        uses: actions/setup-java@v1
+        name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          java-version: 11
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - id: setup-maven
-        name: Cache Maven packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
       - id: setup-settings
-        uses: s4u/maven-settings-action@v2.2.0
+        uses: s4u/maven-settings-action@v3.1.0
         with:
-          servers: '[{"id": "ossrh", "username": "${OSSRH_USERNAME}", "password": "${OSSRH_PASSWORD}"}]'
+          servers: '[{"id": "central", "username": "${{ secrets.CENTRAL_USERNAME }}", "password": "${{ secrets.CENTRAL_PASSWORD }}"}]'
+          override: true
       - id: weld-test
         name: Test with Weld
         run: mvn clean package -Pweld
       - id: owb-test
         name: Test with OpenWebBeans
-        run: mvn clean package jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSWORD }}
+        run: mvn clean package jacoco:report
       - id: maven-release
         name: Release
         run: |
           mvn -B release:prepare
           mvn release:perform -DreleaseProfiles=owb,release -Darguments=-Dgpg.passphrase=$GPG_PASSPHRASE
         env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
